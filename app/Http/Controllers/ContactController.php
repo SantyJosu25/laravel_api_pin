@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ConfirmMail;
 use App\Mail\SendContact;
 use App\Models\Contact;
 use Illuminate\Http\Request;
@@ -25,6 +26,7 @@ class ContactController extends Controller
             $contact->message = $request->message;
             try {
                 Mail::to('santy2516@gmail.com')->send(new SendContact($contact));
+                Mail::to($request->email)->send(new ConfirmMail($contact));
                 $contact->send_email = "Se envio el mail";
             } catch (\exception $e) {
                 $contact->send_email = "Fallo el envio del mail {$e->getMessage()}";
